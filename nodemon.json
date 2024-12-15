@@ -1,0 +1,5 @@
+{
+  "watch": ["todo_backend/src"],
+  "ext": "java",
+  "exec": "docker-compose restart springboot-app"
+}

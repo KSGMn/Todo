@@ -1,0 +1,45 @@
+version: "3.8" # Docker Compose 버전 정의
+
+services:
+  mysql:
+    image: mysql:8.0 # 사용할 MySQL Docker 이미지
+    container_name: todo_mysql_container #컨테이너 이름 지정
+    environment: # MySQL 환경 변수 설정
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306" # 호스트와 컨테이너 간 포트 매핑(호스트포트:컨테이너포트)
+    volumes:
+      - mysql-data:/var/lib/mysql # MySQL 데이터를 저장할 볼륨 연결
+    networks:
+      - app-network
+
+  springboot-app: # Spring boot 서비스
+    build:
+      context: ./todo_backend # Spring boot 프로젝트 경로 (Dockerfile 위치)
+      dockerfile: Dockerfile # 사용할 Dockerfile 명시
+    container_name: todo_springboot_app # 컨테이너 이름 지정
+    ports:
+      - 8080:8080 # 호스트와 컨테이너 간 포트 매핑
+    volumes:
+      - ./todo_backend:/app
+      - /app/build
+    working_dir: /app
+    command: ./gradlew bootRun
+    environment: # Spring boot 환경 변수 설정
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/todo_mysql_docker # MySQL 연결 URL
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER} # MySQL 사용자 이름
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD} # MySQL 사용자 비밀번호
+    depends_on: # 시작 순서
+      - mysql
+    networks:
+      - app-network
+
+volumes: # 데이터 영구 저장을 위한 볼륨 정의
+  mysql-data: # MySQL 데이터를 저장할 볼륨
+
+networks:
+  app-network:
+    driver: bridge
