@@ -32,8 +32,25 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/todo_mysql_docker # MySQL 연결 URL
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER} # MySQL 사용자 이름
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD} # MySQL 사용자 비밀번호
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PASSWORD: 1234
+      MAIL_HOST: smtp.gmail.com
+      MAIL_USERNAME: empl202406@gmail.com
+      MAIL_PASSWORD: ldcq pjyp hzmh zmul
     depends_on: # 시작 순서
       - mysql
+      - redis
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=1234
+    command: ["redis-server", "--requirepass", "1234"]
     networks:
       - app-network
 
