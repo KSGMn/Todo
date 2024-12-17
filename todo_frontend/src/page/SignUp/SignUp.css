@@ -1,0 +1,17 @@
+.signup-form {
+  width: 500px;
+  height: auto;
+  border: 1px solid #aacdff;
+  box-shadow: 7px 7px 39px rgba(0, 104, 255, 0.25);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 60px;
+}
+
+.h3-signup {
+  margin-bottom: 50px;
+}

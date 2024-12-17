@@ -1,0 +1,120 @@
+.input-box-container {
+  --width-of-input: 100%;
+  --border-height: 1px;
+  --border-before-color: rgba(221, 221, 221, 0.39);
+  --border-after-color: #5891ff;
+  --input-hovered-color: #4985e01f;
+  position: relative;
+  width: var(--width-of-input);
+  display: flex;
+}
+
+/* styling of Input */
+.input-box {
+  margin-top: 30px;
+  color: var(--text-color-white);
+  font-size: 0.9rem;
+  background-color: transparent;
+  width: 100%;
+  box-sizing: border-box;
+  padding-inline: 0.5em;
+  padding-block: 0.7em;
+  border: none;
+  border-bottom: var(--border-height) solid var(--border-before-color);
+  padding-right: 80px;
+}
+
+/* 숫자 입력 필드에서 기본 제공 스핀 버튼 숨기기 */
+.input-box[type="number"] {
+  -moz-appearance: textfield; /* Firefox에서 스핀 버튼 숨기기 */
+}
+
+.input-box[type="number"]::-webkit-inner-spin-button,
+.input-box[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Chrome, Safari, Edge에서 스핀 버튼 숨기기 */
+  margin: 0;
+}
+
+.text-area {
+  resize: none;
+  height: 100px;
+}
+
+/* styling of animated border */
+.input-box-border {
+  position: absolute;
+  background: var(--border-after-color);
+  width: 0%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  transition: 0.3s;
+}
+
+.input-box:-webkit-autofill,
+.input-box:-webkit-autofill:hover,
+.input-box:-webkit-autofill:focus,
+.input-box:-webkit-autofill:active {
+  -webkit-text-fill-color: black; /* 원하는 글자색으로 변경 */
+  -webkit-box-shadow: 0 0 0px 1000px var(--primary-color-hover) inset; /* 원하는 배경색으로 변경 */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.has-value {
+  background: var(--primary-color-hover);
+}
+
+/* Hover on Input */
+.input-box:hover {
+  background: var(--primary-color-hover);
+}
+
+.input-box:focus {
+  outline: none;
+}
+/* here is code of animated border */
+.input-box:focus ~ .input-box-border {
+  width: 100%;
+}
+/* === if you want to do animated border on typing === */
+/* remove input:focus code and uncomment below code */
+/* input:valid ~ .input-border{
+   width: 100%;
+ } */
+
+.check-button {
+  background-color: transparent;
+  color: black;
+  font-size: 12px;
+  position: absolute;
+  right: 10px;
+  margin-top: 42px;
+  border: none;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.disable-check-button {
+  background-color: transparent;
+  color: #ccc;
+  font-size: 12px;
+  position: absolute;
+  right: 10px;
+  margin-top: 42px;
+  border: none;
+  pointer-events: none;
+}
+
+.error-message {
+  margin-top: 5px;
+  margin-left: 8px;
+  color: red;
+  font-size: 12px;
+}
+
+.success-message {
+  margin-top: 5px;
+  margin-left: 8px;
+  color: blue;
+  font-size: 12px;
+}
