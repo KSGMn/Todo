@@ -1,7 +1,18 @@
+import { BrowserRouter } from "react-router-dom";
 import "./App.css";
+import Todo from "./page/Todo";
+import AuthProvider from "./provider/AuthProvider";
 
 function App() {
-  return <div>메인페이지</div>;
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <AuthProvider>
+          <Todo />
+        </AuthProvider>
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;
