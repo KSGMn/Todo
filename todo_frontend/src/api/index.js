@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const DOMAIN = "http://localhost:8080";
-const API_DOMAIN = `${DOMAIN}/v1`;
+const API_DOMAIN = `${DOMAIN}/api/v1`;
 
 const ID_CHECK_URL = () => `${API_DOMAIN}/auth/id-check`;
 const EMAIL_CERTIFICATION_URL = () => `${API_DOMAIN}/auth/email-certification`;

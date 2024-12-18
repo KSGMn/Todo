@@ -1,15 +1,20 @@
 import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import PropTypes from "prop-types";
+import { useLocation, useOutletContext } from "react-router-dom";
 
-function TodoModal() {
+function TodoModal({ navigate }) {
+  const { showModal, setShowModal } = useOutletContext();
   const [todos, setTodos] = useState([]);
-  const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const location = useLocation();
 
-  // 모달 열기/닫기
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  const handleCloseModal = () => {
+    setShowModal(false);
+    navigate("/");
+    return;
+  };
 
   // Todo 추가
   const handleAddTodo = () => {
@@ -33,39 +38,10 @@ function TodoModal() {
 
   return (
     <div className="container my-4">
-      <h1 className="text-center mb-4">Todo List</h1>
-
-      {/* Todo 생성 버튼 */}
-      <Button variant="primary" onClick={handleShowModal}>
-        새 Todo 추가
-      </Button>
-
-      {/* Todo 리스트 */}
-      <div className="card mt-4">
-        <ul className="list-group list-group-flush">
-          {todos.length === 0 ? (
-            <li className="list-group-item text-center">등록된 Todo가 없습니다.</li>
-          ) : (
-            todos.map((todo) => (
-              <li key={todo.id} className="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                  <h5>{todo.title}</h5>
-                  <p>{todo.content}</p>
-                  <small className="text-muted">생성일: {todo.createdAt}</small>
-                </div>
-                <Button variant="danger" size="sm" onClick={() => setTodos(todos.filter((t) => t.id !== todo.id))}>
-                  삭제
-                </Button>
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
-
       {/* 모달 컴포넌트 */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>새 Todo 추가</Modal.Title>
+          <Modal.Title>{location.pathname === "/add2" ? "반복할 새 Todo 추가" : "새 Todo 추가"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -102,5 +78,9 @@ function TodoModal() {
     </div>
   );
 }
+
+TodoModal.propTypes = {
+  navigate: PropTypes.func.isRequired,
+};
 
 export default TodoModal;

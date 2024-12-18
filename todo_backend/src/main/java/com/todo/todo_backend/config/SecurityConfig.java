@@ -80,24 +80,13 @@ public class SecurityConfig {
                 // OAuth2 리소스 서버로 JWT 사용
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
                 .logout(logout -> logout.disable());// 기본 스프링 securty 로그아웃을 비활성화해주자 그렇지않으면 404에러가 난다
-        // .oauth2Login(oauth2 -> oauth2
-        // .authorizationEndpoint(
-        // endpoint -> endpoint.baseUri("/api/v1/auth/oauth2"))
-        // .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
-        // .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserService))
-        // .successHandler(oAuth2SuccessHandler))
-        // .exceptionHandling(exceptionHandling -> exceptionHandling
-        // .authenticationEntryPoint(new FailedAuthenticationEntryPoint()))
-        // .addFilterBefore(jwtAuthenticationFilter,
-        // UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("http://localhost:3000");
+        corsConfiguration.addAllowedOrigin("http://localhost:5173");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setAllowCredentials(true);
