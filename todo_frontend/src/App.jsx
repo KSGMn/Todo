@@ -1,6 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
-import Todo from "./page/Todo";
+import Todo from "./page/Todo/Todo";
 import AuthProvider from "./provider/AuthProvider";
 
 function App() {
