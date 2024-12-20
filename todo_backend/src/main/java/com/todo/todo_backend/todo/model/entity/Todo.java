@@ -36,4 +36,10 @@ public class Todo {
 
     @Column(name = "target_date")
     private LocalDate targetDate;
+
+    @Column(name = "recycle")
+    private boolean recycle;
+
+    @Column(name = "done")
+    private boolean done;
 }

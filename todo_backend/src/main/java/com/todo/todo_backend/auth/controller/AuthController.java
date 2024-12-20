@@ -53,6 +53,7 @@ public class AuthController {
         return ResponseEntity.ok("Success");
     }
 
+    // 로그인
     @PostMapping("/login")
     public ResponseEntity<?> signIn(@RequestBody TokenRequestDto tokenRequest,
             HttpServletResponse response) {
@@ -68,14 +69,15 @@ public class AuthController {
         return ResponseEntity.ok(refreshToken);
     }
 
+    // 로그아웃
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response, @CookieValue("accessToken") String accessToken,
-            @CookieValue("refreshToken") String refreshToken) {
+    public ResponseEntity<?> logout(HttpServletResponse response, @CookieValue("accessToken") String act,
+            @CookieValue("refreshToken") String rft) {
 
         long accessTokenExpirationTime = 30 * 60 * 1000L; // 예: 30분
         long refreshTokenExpirationTime = 7 * 24 * 60 * 60 * 1000L; // 예: 7일
 
-        authService.logout(response, accessToken, refreshToken, accessTokenExpirationTime, refreshTokenExpirationTime);
+        authService.logout(response, act, rft, accessTokenExpirationTime, refreshTokenExpirationTime);
         return ResponseEntity.ok("Logout Success");
     }
 

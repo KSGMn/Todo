@@ -1,6 +1,21 @@
 version: "3.8" # Docker Compose 버전 정의
 
 services:
+  frontend:
+    build:
+      context: ./todo_frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173" # Vite 개발 서버 포트
+    volumes:
+      - ./todo_frontend:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev", "--", "--host"]
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - springboot-app
+
   mysql:
     image: mysql:8.0 # 사용할 MySQL Docker 이미지
     container_name: todo_mysql_container #컨테이너 이름 지정

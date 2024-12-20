@@ -1,4 +1,4 @@
-export function DefaultkRequestDto(success, message) {
+export function DefaultRequestDto(success, message) {
   return {
     success: success,
     message: message,

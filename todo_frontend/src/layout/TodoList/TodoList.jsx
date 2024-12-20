@@ -1,32 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TodoCard from "../../components/TodoCard";
 import { Outlet } from "react-router-dom";
 import PropTypes from "prop-types";
+import { deleteTodo } from "../../api";
 
-const TodoList = ({ navigate }) => {
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      title: "Test Todo 1",
-      content: "This is the first Todo",
-      createdAt: "2024-12-25",
-    },
-    { id: 2, title: "Test Todo 2", content: "This is the second todo", createdAt: "2024-12-25" },
-    { id: 3, title: "Test Todo 3", content: "This is the third todo", createdAt: "2024-12-25" },
-    { id: 4, title: "Test Todo 1", content: "This is the first todo", createdAt: "2024-12-25" },
-    { id: 5, title: "Test Todo 2", content: "This is the second todo", createdAt: "2024-12-25" },
-    { id: 6, title: "Test Todo 3", content: "This is the third todo", createdAt: "2024-12-25" },
-    { id: 7, title: "Test Todo 1", content: "This is the first todo", createdAt: "2024-12-25" },
-    { id: 8, title: "Test Todo 2", content: "This is the second todo", createdAt: "2024-12-25" },
-    { id: 9, title: "Test Todo 3", content: "This is the third todo", createdAt: "2024-12-25" },
-    { id: 10, title: "Test Todo 1", content: "This is the first todo", createdAt: "2024-12-25" },
-    { id: 11, title: "Test Todo 2", content: "This is the second todo", createdAt: "2024-12-25" },
-    { id: 12, title: "Test Todo 3", content: "This is the third todo", createdAt: "2024-12-25" },
-  ]);
+const TodoList = ({ navigate, todos, setTodos }) => {
   const [showModal, setShowModal] = useState(false); // eslint-disable-line no-unused-vars
+  const [recycledTodos, setRecycledTodos] = useState([]); // recycle이 true인 리스트
+  const [pendingTodos, setPendingTodos] = useState([]); // recycle이 false이고 done이 false인 리스트
+  const [doneTodos, setDoneTodos] = useState([]); // recycle이 false이고 done이 true인 리스트
+
+  useEffect(() => {
+    if (!Array.isArray(todos)) {
+      setRecycledTodos([]);
+      setDoneTodos([]);
+      setPendingTodos([]);
+      return;
+    }
+    setRecycledTodos(todos.filter((todo) => todo.recycle === true));
+    setPendingTodos(todos.filter((todo) => todo.recycle === false && todo.done === false));
+    setDoneTodos(todos.filter((todo) => todo.recycle === false && todo.done === true));
+  }, [todos]);
+
+  // Todo 삭제 api 요청
+  const deleteTodoResponse = async (id) => {
+    try {
+      return await deleteTodo(id);
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  };
 
   // Todo 삭제 함수
   const handleDeleteTodo = (id) => {
+    deleteTodoResponse(id);
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
@@ -56,21 +64,21 @@ const TodoList = ({ navigate }) => {
           style={{ overflowY: "auto", scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {/* 반복할 Todo 리스트 */}
-          <TodoCard todos={todos} handleDeleteTodo={handleDeleteTodo} />
+          <TodoCard todos={recycledTodos} handleDeleteTodo={handleDeleteTodo} />
         </div>
         <div
           className="card-group d-flex justify-content-center flex-fill p-4 border border-secondary rounded-4"
           style={{ overflowY: "auto", scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {/* Todo 리스트 */}
-          <TodoCard todos={todos} handleDeleteTodo={handleDeleteTodo} />
+          <TodoCard todos={pendingTodos} handleDeleteTodo={handleDeleteTodo} />
         </div>
         <div
           className="card-group d-flex justify-content-center flex-fill p-4 border border-secondary rounded-4"
           style={{ overflowY: "auto", scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {/* 완료한 Todo 리스트 */}
-          <TodoCard todos={todos} handleDeleteTodo={handleDeleteTodo} />
+          <TodoCard todos={doneTodos} handleDeleteTodo={handleDeleteTodo} />
         </div>
       </div>
       <div className="modal" style={{ position: "relative" }}>
@@ -82,6 +90,8 @@ const TodoList = ({ navigate }) => {
 
 TodoList.propTypes = {
   navigate: PropTypes.func.isRequired,
+  todos: PropTypes.array.isRequired,
+  setTodos: PropTypes.func.isRequired,
 };
 
 export default TodoList;
