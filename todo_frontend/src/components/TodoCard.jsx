@@ -24,9 +24,9 @@ const TodoCard = ({ todos, handleDeleteTodo }) => {
                     WebkitLineClamp: 5, // 최대 5줄로 제한
                   }}
                 >
-                  {todo.content}
+                  {todo.contents}
                 </p>
-                <small className="text-muted">생성일: {todo.createdAt}</small>
+                <small className="text-muted">생성일: {todo.targetDate}</small>
               </div>
               <div className="d-flex gap-2">
                 <button className="btn btn-success btn-sm" onClick={() => handleDeleteTodo(todo.id)}>
@@ -47,10 +47,10 @@ const TodoCard = ({ todos, handleDeleteTodo }) => {
 TodoCard.propTypes = {
   todos: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      title: PropTypes.string.isRequired,
+      id: PropTypes.number,
+      title: PropTypes.string,
       content: PropTypes.string,
-      createdAt: PropTypes.string.isRequired,
+      createdAt: PropTypes.string,
     })
   ).isRequired,
   handleDeleteTodo: PropTypes.func.isRequired,

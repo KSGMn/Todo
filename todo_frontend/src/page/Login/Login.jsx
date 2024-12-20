@@ -49,8 +49,12 @@ const Login = () => {
         const now = new Date().getTime();
         const expires = new Date(now + 900 * 1000); //15분
         const accessToken = data.data.accessToken;
+        // const payload = data.data.accessToken.split(",")[1];
+        // const decoded = JSON.parse(atob(payload));
+        // console.log(decoded);
         const code = data.status;
         if (code === 200) {
+          localStorage.setItem("isLoggedIn", "true");
           navigate("/");
           setAccessToken(accessToken);
           Cookies.set("accessToken", accessToken, { expires, path: "/" });

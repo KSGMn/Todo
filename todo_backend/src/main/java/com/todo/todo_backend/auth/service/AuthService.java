@@ -191,12 +191,16 @@ public class AuthService {
         accessTokenCookie.setHttpOnly(true);
         accessTokenCookie.setPath("/");
         accessTokenCookie.setMaxAge(60 * 15); // 15분
+        accessTokenCookie.setSecure(true);
+        accessTokenCookie.setAttribute("SamSite", "None");
 
         Cookie refreshTokenCookie = new Cookie("refreshToken",
                 refreshToken.getRefreshToken());
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setPath("/");
         refreshTokenCookie.setMaxAge(60 * 60 * 24 * 7); // 7일
+        refreshTokenCookie.setSecure(true);
+        refreshTokenCookie.setAttribute("SamSite", "None");
 
         // 응답에 쿠키 추가
         response.addCookie(accessTokenCookie);
@@ -235,18 +239,20 @@ public class AuthService {
         }
     }
 
-    public ResponseEntity<?> logout(HttpServletResponse response, @CookieValue("accessToken") String accessToken,
-            @CookieValue("refreshToken") String refreshToken, long accessTokenExpirationTime,
+    public ResponseEntity<?> logout(HttpServletResponse response,
+            @CookieValue(value = "accessToken", required = false) String act,
+            @CookieValue(value = "refreshToken", required = false) String rft,
+            long accessTokenExpirationTime,
             long refreshTokenExpirationTime) {
 
         // 블랙리스트에 추가
-        redisTemplate.opsForValue().set("blacklist:" + accessToken, "true", accessTokenExpirationTime,
+        redisTemplate.opsForValue().set("blacklist:" + act, "true", accessTokenExpirationTime,
                 TimeUnit.MILLISECONDS);
-        redisTemplate.opsForValue().set("blacklist:" + refreshToken, "true", refreshTokenExpirationTime,
+        redisTemplate.opsForValue().set("blacklist:" + rft, "true", refreshTokenExpirationTime,
                 TimeUnit.MILLISECONDS);
 
         // 기존 리프레시 토큰 삭제
-        redisTemplate.delete(refreshToken);
+        redisTemplate.delete(rft);
 
         // 액세스 토큰 쿠키 만료
         Cookie accessTokenCookie = new Cookie("accessToken", null);

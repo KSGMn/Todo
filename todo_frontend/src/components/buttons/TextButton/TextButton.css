@@ -24,3 +24,7 @@ a {
 .menu__link:hover::before {
   width: 100%;
 }
+
+.menu__link.hidden {
+  visibility: hidden;
+}

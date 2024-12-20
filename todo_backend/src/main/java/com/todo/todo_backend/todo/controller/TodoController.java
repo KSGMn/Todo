@@ -25,30 +25,55 @@ public class TodoController {
     @Autowired
     private TodoService todoService;
 
+    // 모든 Todo 조회
     @GetMapping
     public ResponseEntity<CommonResponseDto<List<Todo>>> findAllTodo() {
         return todoService.findAllTodo();
     }
 
+    // Todo 생성
     @PostMapping
     public ResponseEntity<CommonResponseDto<Todo>> createTodo(@RequestBody Todo todo) {
         try {
             return todoService.createTodo(todo);
         } catch (Exception e) {
-            throw new CustomExceptions.BadRequestException("Create Fail");
+            throw new CustomExceptions.BadRequestException("Create Fail.");
         }
     }
 
+    // 반복할 Todo 생성
+    @PostMapping("/add")
+    public ResponseEntity<CommonResponseDto<Todo>> createRecycleTodo(@RequestBody Todo todo) {
+        try {
+            return todoService.createRecycleTodo(todo);
+        } catch (Exception e) {
+            throw new CustomExceptions.BadRequestException("Create Fail.");
+        }
+    }
+
+    // Todo 업데이트
     @PostMapping("/{id}")
     public ResponseEntity<CommonResponseDto<Todo>> updateTodo(@RequestBody TodoRequestDto todoRequestDto,
             @PathVariable Integer id) {
         try {
             return todoService.updateTodo(todoRequestDto, id);
         } catch (Exception e) {
+            throw new CustomExceptions.BadRequestException("Update Fail.");
+        }
+    }
+
+    // Todo 완료 및 취소
+    @PostMapping("/done/{id}")
+    public ResponseEntity<?> doneTodo(@PathVariable Integer id) {
+        try {
+            todoService.doneTodo(id);
+            return ResponseEntity.ok("Update Success.");
+        } catch (Exception e) {
             throw new CustomExceptions.BadRequestException("Update Fail");
         }
     }
 
+    // Todo 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTodo(@PathVariable Integer id) {
         try {
@@ -57,7 +82,6 @@ public class TodoController {
         } catch (Exception e) {
             throw new CustomExceptions.NotFoundException("Not Fount");
         }
-
     }
 
 }
