@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import TodoCard from "../../components/TodoCard";
 import { Outlet } from "react-router-dom";
 import PropTypes from "prop-types";
-import { deleteTodo } from "../../api";
+import { deleteTodo, doneTodo } from "../../api";
 
 const TodoList = ({ navigate, todos, setTodos }) => {
   const [showModal, setShowModal] = useState(false); // eslint-disable-line no-unused-vars
@@ -38,13 +38,29 @@ const TodoList = ({ navigate, todos, setTodos }) => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
-  const handleOpenModal = (type) => {
-    setShowModal(true);
+  const doneTodoResponse = async (id) => {
+    try {
+      return await doneTodo(id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Todo 완료 함수
+  const handleClearTodo = (id) => {
+    doneTodoResponse(id);
+    setTodos((prevTodos) => prevTodos.map((todo) => (todo.id === id ? { ...todo, done: !todo.done } : todo)));
+  };
+
+  const handleOpenModal = (type, id) => {
     if (type === "반복") {
       navigate("/add2");
+    } else if (type == "읽기") {
+      navigate(`/read/${id}`);
     } else {
       navigate("/add");
     }
+    setShowModal(true);
     return;
   };
 
@@ -64,21 +80,36 @@ const TodoList = ({ navigate, todos, setTodos }) => {
           style={{ overflowY: "auto", scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {/* 반복할 Todo 리스트 */}
-          <TodoCard todos={recycledTodos} handleDeleteTodo={handleDeleteTodo} />
+          <TodoCard
+            todos={recycledTodos}
+            handleDeleteTodo={handleDeleteTodo}
+            handleOpenModal={(type, id) => handleOpenModal(type, id)}
+            handleClearTodo={(id) => handleClearTodo(id)}
+          />
         </div>
         <div
           className="card-group d-flex justify-content-center flex-fill p-4 border border-secondary rounded-4"
           style={{ overflowY: "auto", scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {/* Todo 리스트 */}
-          <TodoCard todos={pendingTodos} handleDeleteTodo={handleDeleteTodo} />
+          <TodoCard
+            todos={pendingTodos}
+            handleDeleteTodo={handleDeleteTodo}
+            handleOpenModal={(type, id) => handleOpenModal(type, id)}
+            handleClearTodo={(id) => handleClearTodo(id)}
+          />
         </div>
         <div
           className="card-group d-flex justify-content-center flex-fill p-4 border border-secondary rounded-4"
           style={{ overflowY: "auto", scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {/* 완료한 Todo 리스트 */}
-          <TodoCard todos={doneTodos} handleDeleteTodo={handleDeleteTodo} />
+          <TodoCard
+            todos={doneTodos}
+            handleDeleteTodo={handleDeleteTodo}
+            handleOpenModal={(type, id) => handleOpenModal(type, id)}
+            handleClearTodo={(id) => handleClearTodo(id)}
+          />
         </div>
       </div>
       <div className="modal" style={{ position: "relative" }}>

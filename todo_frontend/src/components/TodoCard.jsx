@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-const TodoCard = ({ todos, handleDeleteTodo }) => {
+const TodoCard = ({ todos, handleDeleteTodo, handleOpenModal, handleClearTodo }) => {
   return (
     <div className="card p-3">
       <ul className="list-group list-group-flush">
@@ -15,13 +15,18 @@ const TodoCard = ({ todos, handleDeleteTodo }) => {
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
                   flex: 1,
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  handleOpenModal("읽기", todo.id);
                 }}
               >
-                <h5>{todo.title}</h5>
+                <h5 style={{ textDecoration: todo.done ? "line-through" : "none" }}>{todo.title}</h5>
                 <p
                   style={{
                     whiteSpace: "normal", // 줄바꿈 허용
                     WebkitLineClamp: 5, // 최대 5줄로 제한
+                    textDecoration: todo.done ? "line-through" : "none",
                   }}
                 >
                   {todo.contents}
@@ -29,8 +34,8 @@ const TodoCard = ({ todos, handleDeleteTodo }) => {
                 <small className="text-muted">생성일: {todo.targetDate}</small>
               </div>
               <div className="d-flex gap-2">
-                <button className="btn btn-success btn-sm" onClick={() => handleDeleteTodo(todo.id)}>
-                  완료
+                <button className="btn btn-success btn-sm" onClick={() => handleClearTodo(todo.id)}>
+                  {todo.done ? "취소" : "완료"}
                 </button>
                 <button className="btn btn-danger btn-sm" onClick={() => handleDeleteTodo(todo.id)}>
                   삭제
@@ -54,6 +59,8 @@ TodoCard.propTypes = {
     })
   ).isRequired,
   handleDeleteTodo: PropTypes.func.isRequired,
+  handleOpenModal: PropTypes.func.isRequired,
+  handleClearTodo: PropTypes.func.isRequired,
 };
 
 export default TodoCard;

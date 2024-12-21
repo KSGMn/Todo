@@ -43,8 +43,8 @@ export const loginRequest = async (requestBody) => {
 };
 
 //로그아웃
-export const logoutRequest = async () => {
-  const result = await axios.post(LOG_OUT_URL(), {}, { withCredentials: true });
+export const logoutRequest = async (requestBody) => {
+  const result = await axios.post(LOG_OUT_URL(requestBody), {}, { withCredentials: true });
   return result;
 };
 
