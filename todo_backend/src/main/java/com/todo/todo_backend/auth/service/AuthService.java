@@ -178,13 +178,14 @@ public class AuthService {
         TokenResponseDto refreshToken = jwtTokenService.generateRefreshToken(userId);
 
         TokenResponseDto responseToken = TokenResponseDto.builder()
+                .userId(userId)
                 .grantType("Bearer")
                 .accessToken(accessToken.getAccessToken())
                 .refreshToken(refreshToken.getRefreshToken())
                 .build();
 
         // 리프레시 토큰을 Redis에 저장, 유효기간 7일
-        redisTemplate.opsForValue().set("rt-" + refreshToken.getRefreshToken(), "rt-" + userId, 7, TimeUnit.DAYS);
+        redisTemplate.opsForValue().set("rt-" + userId, "rt-" + refreshToken.getRefreshToken(), 7, TimeUnit.DAYS);
 
         // 쿠키 생성 및 설정
         Cookie accessTokenCookie = new Cookie("accessToken", accessToken.getAccessToken());
@@ -210,6 +211,7 @@ public class AuthService {
 
     }
 
+    // 여기 레디스 저장값 키(유저id) : 밸류(토큰값)으로 변경했음
     public ResponseEntity<TokenResponseDto> refreshToken(@RequestBody TokenResponseDto refreshTokenRequest,
             HttpServletResponse response) {
         String refreshToken = refreshTokenRequest.getRefreshToken().substring(3);
@@ -240,19 +242,21 @@ public class AuthService {
     }
 
     public ResponseEntity<?> logout(HttpServletResponse response,
-            @CookieValue(value = "accessToken", required = false) String act,
-            @CookieValue(value = "refreshToken", required = false) String rft,
+            @CookieValue("accessToken") String act,
             long accessTokenExpirationTime,
             long refreshTokenExpirationTime) {
+
+        String userId = jwtTokenService.getUsernameFromToken(act);
+        String refreshToken = redisTemplate.opsForValue().get("rt-" + userId);
 
         // 블랙리스트에 추가
         redisTemplate.opsForValue().set("blacklist:" + act, "true", accessTokenExpirationTime,
                 TimeUnit.MILLISECONDS);
-        redisTemplate.opsForValue().set("blacklist:" + rft, "true", refreshTokenExpirationTime,
+        redisTemplate.opsForValue().set("blacklist:" + refreshToken, "true", refreshTokenExpirationTime,
                 TimeUnit.MILLISECONDS);
 
         // 기존 리프레시 토큰 삭제
-        redisTemplate.delete(rft);
+        redisTemplate.delete(refreshToken);
 
         // 액세스 토큰 쿠키 만료
         Cookie accessTokenCookie = new Cookie("accessToken", null);

@@ -33,6 +33,7 @@ const Todo = () => {
           <Route path="/" element={<TodoList navigate={navigate} todos={todos} setTodos={setTodos} />}>
             <Route path="/add" element={<TodoModal navigate={navigate} todos={todos} setTodos={setTodos} />} />
             <Route path="/add2" element={<TodoModal navigate={navigate} todos={todos} setTodos={setTodos} />} />
+            <Route path="/read/:id" element={<TodoModal navigate={navigate} todos={todos} setTodos={setTodos} />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />

@@ -71,13 +71,13 @@ public class AuthController {
 
     // 로그아웃
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response, @CookieValue("accessToken") String act,
-            @CookieValue("refreshToken") String rft) {
+    public ResponseEntity<?> logout(HttpServletResponse response, @CookieValue("accessToken") String act) {
 
         long accessTokenExpirationTime = 30 * 60 * 1000L; // 예: 30분
         long refreshTokenExpirationTime = 7 * 24 * 60 * 60 * 1000L; // 예: 7일
 
-        authService.logout(response, act, rft, accessTokenExpirationTime, refreshTokenExpirationTime);
+        authService.logout(response, act, accessTokenExpirationTime,
+                refreshTokenExpirationTime);
         return ResponseEntity.ok("Logout Success");
     }
 
