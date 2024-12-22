@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +26,14 @@ public class TodoController {
     @Autowired
     private TodoService todoService;
 
-    // 모든 Todo 조회
+    // 로그인 한 유저의 모든 Todo 조회
     @GetMapping
+    public ResponseEntity<CommonResponseDto<List<Todo>>> findAllByUserId(@CookieValue("accessToken") String act) {
+        return todoService.findAllByUserId(act);
+    }
+
+    // 모든 Todo 조회
+    @GetMapping("/all")
     public ResponseEntity<CommonResponseDto<List<Todo>>> findAllTodo() {
         return todoService.findAllTodo();
     }

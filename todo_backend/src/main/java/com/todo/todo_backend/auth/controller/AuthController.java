@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.todo.todo_backend.auth.model.dto.request.CheckCertificationRequestDto;
-import com.todo.todo_backend.auth.model.dto.request.CreateTestUserRequestDto;
 import com.todo.todo_backend.auth.model.dto.request.EmailCertificationRequestDto;
 import com.todo.todo_backend.auth.model.dto.request.IdCheckRequestDto;
 import com.todo.todo_backend.auth.model.dto.request.SignUpRequestDto;
@@ -33,21 +32,21 @@ public class AuthController {
     }
 
     // 중복확인 및 인증번호 생성 후 이메일 전송
-    @PostMapping("/email-certification")
+    @PostMapping("/emails/certification")
     public ResponseEntity<?> emailCertification(@RequestBody EmailCertificationRequestDto dto) {
         authService.emailCertification(dto);
         return ResponseEntity.ok("Success");
     }
 
     // 중복확인 및 인증번호 생성 후 이메일 전송
-    @PostMapping("/check-email-certification")
+    @PostMapping("/emails/verification")
     public ResponseEntity<?> checkEmailCertification(@RequestBody CheckCertificationRequestDto dto) {
         authService.checkCertification(dto);
         return ResponseEntity.ok("Success");
     }
 
     // 회원가입
-    @PostMapping("/signup")
+    @PostMapping("/users")
     public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto dto) {
         authService.signUp(dto);
         return ResponseEntity.ok("Success");
@@ -62,13 +61,6 @@ public class AuthController {
 
     }
 
-    @PostMapping("/token/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody TokenResponseDto refreshTokenRequest,
-            HttpServletResponse response) {
-        ResponseEntity<TokenResponseDto> refreshToken = authService.refreshToken(refreshTokenRequest, response);
-        return ResponseEntity.ok(refreshToken);
-    }
-
     // 로그아웃
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response, @CookieValue("accessToken") String act) {
@@ -79,12 +71,6 @@ public class AuthController {
         authService.logout(response, act, accessTokenExpirationTime,
                 refreshTokenExpirationTime);
         return ResponseEntity.ok("Logout Success");
-    }
-
-    @PostMapping("/create-test-user")
-    public ResponseEntity<?> createTestUser(@RequestBody CreateTestUserRequestDto dto) {
-        authService.createTestUser(dto);
-        return ResponseEntity.ok("Success");
     }
 
 }

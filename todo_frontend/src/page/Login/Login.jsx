@@ -5,8 +5,9 @@ import { loginRequest } from "../../api";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
 import Cookies from "js-cookie";
+import PropTypes from "prop-types";
 
-const Login = () => {
+const Login = ({ setIsLoggedIn }) => {
   const { setAccessToken } = useContext(AuthContext);
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -54,6 +55,7 @@ const Login = () => {
         if (code === 200) {
           localStorage.setItem("isLoggedIn", "true");
           localStorage.setItem("userId", userId);
+          setIsLoggedIn(true);
           navigate("/");
           setAccessToken(accessToken);
           Cookies.set("accessToken", accessToken, { expires, path: "/" });
@@ -101,6 +103,10 @@ const Login = () => {
       </button>
     </form>
   );
+};
+
+Login.propTypes = {
+  setIsLoggedIn: PropTypes.func,
 };
 
 export default Login;
