@@ -1,13 +1,14 @@
 import "../Header/Header.css";
 import TextButton from "../../components/buttons/TextButton/TextButton";
 import { logoutRequest } from "../../api";
+import PropTypes from "prop-types";
 
-const Header = () => {
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
+const Header = ({ isLoggedIn, setIsLoggedIn }) => {
   const logout = () => {
-    console.log("로그아웃");
     localStorage.removeItem("isLoggedIn");
+    setIsLoggedIn(false);
     logoutRequest();
+    window.location.reload();
   };
   return (
     <div className="header-container">
@@ -24,6 +25,11 @@ const Header = () => {
       </div>
     </div>
   );
+};
+
+Header.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  setIsLoggedIn: PropTypes.func,
 };
 
 export default Header;

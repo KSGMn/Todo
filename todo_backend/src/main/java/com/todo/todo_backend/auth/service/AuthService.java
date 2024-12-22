@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.todo.todo_backend.auth.CertificationNumber;
 import com.todo.todo_backend.auth.model.dto.entity.Certification;
 import com.todo.todo_backend.auth.model.dto.request.CheckCertificationRequestDto;
-import com.todo.todo_backend.auth.model.dto.request.CreateTestUserRequestDto;
 import com.todo.todo_backend.auth.model.dto.request.EmailCertificationRequestDto;
 import com.todo.todo_backend.auth.model.dto.request.IdCheckRequestDto;
 import com.todo.todo_backend.auth.model.dto.request.SignUpRequestDto;
@@ -211,36 +210,7 @@ public class AuthService {
 
     }
 
-    // 여기 레디스 저장값 키(유저id) : 밸류(토큰값)으로 변경했음
-    public ResponseEntity<TokenResponseDto> refreshToken(@RequestBody TokenResponseDto refreshTokenRequest,
-            HttpServletResponse response) {
-        String refreshToken = refreshTokenRequest.getRefreshToken().substring(3);
-
-        // 리프레시 토큰의 유효성 검사 및 사용자 이름 추출
-        if (jwtTokenService.validateRefreshToken(refreshToken)) {
-            String getRedisUserId = (String) redisTemplate.opsForValue().get(refreshTokenRequest.getRefreshToken());
-            String userId = getRedisUserId.substring(3);
-            TokenResponseDto newAccessToken = jwtTokenService.generateAccessToken(userId);
-
-            // 새 액세스 토큰으로 Token 객체 생성 (리프레시 토큰은 재발급하지 않음)
-            TokenResponseDto responseToken = TokenResponseDto.builder()
-                    .grantType("Bearer")
-                    .accessToken(newAccessToken.getAccessToken())
-                    .build();
-
-            Cookie accessTokenCookie = new Cookie("accessToken", newAccessToken.getAccessToken());
-            accessTokenCookie.setHttpOnly(true);
-            accessTokenCookie.setPath("/");
-            accessTokenCookie.setMaxAge(60 * 15); // 15분
-
-            response.addCookie(accessTokenCookie);
-
-            return ResponseEntity.ok(responseToken);
-        } else {
-            return ResponseEntity.status(401).body(null); // 유효하지 않은 리프레시 토큰 처리
-        }
-    }
-
+    // 로그아웃
     public ResponseEntity<?> logout(HttpServletResponse response,
             @CookieValue("accessToken") String act,
             long accessTokenExpirationTime,
@@ -274,26 +244,6 @@ public class AuthService {
 
         // 로그아웃 성공 응답
         return ResponseEntity.ok("Logged out successfully");
-    }
-
-    public void createTestUser(CreateTestUserRequestDto dto) {
-
-        String password = dto.getPassword();
-        String encodedPassword = passwordEncoder.encode(password);
-        dto.setPassword(encodedPassword);
-
-        for (int i = 0; i < 10000; i++) {
-            User userEntity = User.builder()
-                    .userId("testUser" + i)
-                    .password(dto.getPassword())
-                    .email("test" + i + "@gmail.com")
-                    .userName("testUser" + i)
-                    .role("USER")
-                    .signupDate(LocalDate.now())
-                    .build();
-            userRepository.save(userEntity);
-        }
-
     }
 
 }

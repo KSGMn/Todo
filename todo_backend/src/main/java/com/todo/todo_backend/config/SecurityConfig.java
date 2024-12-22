@@ -65,10 +65,11 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/v1/auth/**", "/api/v1/todos", "/api/v1/todos/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**", "/swagger-ui/**",
+                                "/v3/api-docs/**")
+                        .permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**", "/")
                         .permitAll() // CORS 사전 요청 Preflight request)접근 허용
-                        // .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(

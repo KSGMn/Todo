@@ -10,6 +10,7 @@ import { findAllTodo } from "../../api";
 
 const Todo = () => {
   const [todos, setTodos] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn") ? true : false);
 
   const navigate = useNavigate();
   // 모든 Todo 데이터 가져오기
@@ -27,7 +28,7 @@ const Todo = () => {
   }, []);
   return (
     <div className="Todo">
-      <Header />
+      <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <main>
         <Routes>
           <Route path="/" element={<TodoList navigate={navigate} todos={todos} setTodos={setTodos} />}>
@@ -35,7 +36,7 @@ const Todo = () => {
             <Route path="/add2" element={<TodoModal navigate={navigate} todos={todos} setTodos={setTodos} />} />
             <Route path="/read/:id" element={<TodoModal navigate={navigate} todos={todos} setTodos={setTodos} />} />
           </Route>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>
       </main>

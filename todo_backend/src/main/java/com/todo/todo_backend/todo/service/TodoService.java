@@ -6,10 +6,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CookieValue;
 
+import com.todo.todo_backend.auth.service.JwtTokenService;
 import com.todo.todo_backend.common.dto.response.CommonResponseDto;
 import com.todo.todo_backend.common.dto.response.CommonResponseUtil;
 import com.todo.todo_backend.todo.model.dto.request.TodoRequestDto;
@@ -20,14 +21,30 @@ import com.todo.todo_backend.todo.repository.TodoRepository;
 public class TodoService {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private TodoRepository todoRepository;
 
     @Autowired
-    private TodoRepository todoRepository;
+    private JwtTokenService jwtTokenService;
 
     // id로 Todo 찾기
     public Todo findByIdOrThrow(Integer id) {
         return todoRepository.findById(id).orElseThrow(() -> new RuntimeException("Not Found: " + id));
+    }
+
+    // 로그인 한 유저의 모든 Todo 조회
+    public ResponseEntity<CommonResponseDto<List<Todo>>> findAllByUserId(@CookieValue("accessToken") String act) {
+
+        String userId = jwtTokenService.getUsernameFromToken(act);
+        System.out.println(act + "토큰");
+        System.out.println(userId + "유저아이디");
+
+        List<Todo> todos = todoRepository.findAllByUsername(userId);
+        String message = todos.isEmpty() ? "Empty" : "Success";
+
+        ResponseEntity<CommonResponseDto<List<Todo>>> response = CommonResponseUtil.createResponseEntity(message, todos,
+                HttpStatus.OK);
+
+        return response;
     }
 
     // 모든 Todo 조회
@@ -126,7 +143,7 @@ public class TodoService {
     // 매일 00시에 실행
     @Scheduled(cron = "0 0 0 * * ?") // 매일 00:00에 실행
     public void resetDoneForRecycledTodos() {
-        todoRepository.resetDoneForRecycledTodos();
-        System.out.println("Recycle 완료 데이터 초기화가 수행되었습니다.");
+        int updatedRows = todoRepository.resetDoneForRecycledTodos();
+        System.out.println("Recycle 완료 데이터 초기화가 수행되었습니다." + updatedRows);
     }
 }
