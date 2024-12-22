@@ -2,12 +2,14 @@ import "../Header/Header.css";
 import TextButton from "../../components/buttons/TextButton/TextButton";
 import { logoutRequest } from "../../api";
 import PropTypes from "prop-types";
+import Cookies from "js-cookie";
 
 const Header = ({ isLoggedIn, setIsLoggedIn }) => {
   const logout = () => {
     localStorage.removeItem("isLoggedIn");
     setIsLoggedIn(false);
     logoutRequest();
+    Cookies.remove("accessToken");
     window.location.reload();
   };
   return (

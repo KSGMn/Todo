@@ -17,15 +17,17 @@ const Todo = () => {
   useEffect(() => {
     const findAllTodoResponse = async () => {
       try {
-        const data = await findAllTodo();
-        setTodos(Array.isArray(data.data.data) ? data.data.data : []);
+        if (location.pathname === "/") {
+          const data = await findAllTodo();
+          setTodos(Array.isArray(data.data.data) ? data.data.data : []);
+        }
       } catch (error) {
         console.log(error);
         return [];
       }
     };
     findAllTodoResponse();
-  }, []);
+  }, [location.pathname]);
   return (
     <div className="Todo">
       <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
