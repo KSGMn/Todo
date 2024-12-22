@@ -1,0 +1,48 @@
+5server:
+  port: 8080
+  servlet:
+    context-path: /v1
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/todo_mysql_docker?allowPublicKeyRetrieval=true&useSSL=true
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:sql/schema.sql
+      data-locations: classpath:sql/data.sql
+  jpa:
+    hibernate:
+      ddl-auto: none # JPA가 테이블을 생성하거나 변경하지 않도록 설정
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idel: 0
+      timeout: 2000ms
+      password: ${REDIS_PASSWORD}
+  mail:
+    host: smtp.gmail.com # Gmail SMTP 서버 호스트
+    port: 587 # Gmail SMTP 서버 포트
+    username: ${MAIL_USERNAME} # 이메일 계정 사용자 이름
+    password: ${MAIL_PASSWORD} # 이메일 계정 비밀번호
+    protocol: smtp # 사용할 프로토콜 (일반적으로 smtp 사용)
+    properties:
+      mail.smtp:
+        auth: true # SMTP 인증 사용 여부
+        starttls.enable: true # STARTTLS 사용 여부 (Gmail은 필수)
+
+logging:
+  level:
+    root: ERROR
+    org.springframework.web: DEBUG
+    com.yourcompany: DEBUG
