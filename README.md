@@ -2,7 +2,9 @@
 <br><br>
 
 ## 설명
-http://localhost:8080/swagger-ui/index.html에서 작성된 api들을 확인할 수 있습니다.<br>
+<img width="1912" alt="image" src="https://github.com/user-attachments/assets/072a64f6-d3f7-448d-b8a5-aeb239b84b67" />
+
+http://localhost:8080/swagger-ui/index.html 링크에서 작성된 api들을 확인할 수 있습니다.<br>
 docker-compose파일과 application.yml파일에서 추가설정 후 실행 가능합니다.<br>
 기본적으로 생성되는 유저 아이디는 admin, 비밀번호는 !Qa12345678 입니다.
 <br><br>
@@ -21,18 +23,27 @@ Docker 및 Docker-Compose: 애플리케이션 컨테이너화를 통해 개발�
 <br><br>
 
 ### 회원가입 기능
+<img width="1912" alt="image" src="https://github.com/user-attachments/assets/b5cfdd78-b39e-412d-b919-b131b0118802" />
+
 유저 아이디와 닉네임 중복확인 후 이메일로 인증번호 전송.<br>
 인증번호 입력 후 전송된 인증번호와 일치하는지 확인.<br>
 비밀번호 패턴에 맞게 비밀번호 입력 후 회원가입.
 <br><br>
 
-### 로그인 기능
+### 로그인 
+<img width="1912" alt="image" src="https://github.com/user-attachments/assets/1dd564d6-6c43-4abd-be0c-99e5b33204e0" />
+
 데이터베이스에 저장된 유저 아이디와 비밀번호가 일치하는지 확인 후 로그인.<br>
+
+<img width="1250" alt="image" src="https://github.com/user-attachments/assets/6e6dce28-2baf-4da5-afd2-84c732b1fe10" />
+
 로그인과 동시에 Jwt토큰을 이용하여 accessToken과 refreshToken을 생성.
 <br><br>
 
 ### 사용자 인증 및 관리
 Spring Security를 이용하여 보안 활성화.<br>
+<img width="1912" alt="image" src="https://github.com/user-attachments/assets/024fae41-6fc2-4750-8f10-f83b8551884a" />
+
 accessToken은 쿠키로 저장하여 클라이언트로 전송, refreshToken은 redis에 저장.<br>
 accessToken이 만료되면 redis에 있는 refreshToken이 유효한 토큰인지 확인 후 accessToken재발급.<br>
 회원가입과 로그인을 제외한 모든 api요청과 경로는 인증되지 않은 사용자는 접근 불가.
@@ -43,11 +54,17 @@ accessToken이 만료되면 redis에 있는 refreshToken이 유효한 토큰인�
 <br><br>
 
 ### CRUD 기능
+<img width="1912" alt="image" src="https://github.com/user-attachments/assets/acb3016f-a09c-4c95-845e-c6b13caf0669" />
+
+<img width="1912" alt="image" src="https://github.com/user-attachments/assets/d070a839-26e3-4b1f-b9a2-448cff1cb1c9" />
+
 RestApi와 JAP를 이용하여 간편하고 가독성 높은 코드 구현.<br>
 로그인한 유저의 이름을 조회하여 해당 유저가 작성한 Todo만 조회 가능.
 <br><br>
 
 ### 에러 처리
+<img width="1250" alt="image" src="https://github.com/user-attachments/assets/888e5423-cfbe-4864-b3f9-bb9d1b01b3f4" />
+
 CustomException을 생성하여 상황에 맞게 상태코드와 메세지 설정.
 <br><br>
 
