@@ -4,6 +4,7 @@
 ## 설명
 http://localhost:8080/swagger-ui/index.html에서 작성된 api들을 확인할 수 있습니다.<br>
 docker-compose파일과 application.yml파일에서 추가설정 후 실행 가능합니다.
+기본적으로 생성되는 유저 아이디는 admin, 비밀번호는 !Qa12345678 입니다.
 <br><br>
 
 ## Todo
